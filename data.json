@@ -1,0 +1,508 @@
+{
+    "data": [
+        {
+            "type": "units",
+            "id": "890908",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "6876",
+                "land_type": "free_standard",
+                "min_total_price": 0,
+                "model": "model_1",
+                "moh_price": 0,
+                "price": 183960,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-6876",
+                "unit_size": 630,
+                "unit_type": "land",
+                "views_count": 0
+            }
+        },
+        {
+            "type": "units",
+            "id": "890659",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "6052",
+                "land_type": "free_standard",
+                "min_total_price": 0,
+                "model": "model_1",
+                "moh_price": 0,
+                "price": 184048.678446896,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-6052",
+                "unit_size": 630.303693311289,
+                "unit_type": "land",
+                "views_count": 5
+            }
+        },
+        {
+            "type": "units",
+            "id": "890533",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "5644",
+                "land_type": "free_standard",
+                "min_total_price": 0,
+                "model": "model_1",
+                "moh_price": 0,
+                "price": 224498.300495904,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-5644",
+                "unit_size": 768.82979621885,
+                "unit_type": "land",
+                "views_count": 0
+            }
+        },
+        {
+            "type": "units",
+            "id": "890572",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "5853",
+                "land_type": "free_standard",
+                "min_total_price": 0,
+                "model": "model_1",
+                "moh_price": 0,
+                "price": 204399.999999405,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-5853",
+                "unit_size": 699.999999997963,
+                "unit_type": "land",
+                "views_count": 0
+            }
+        },
+        {
+            "type": "units",
+            "id": "667886",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "724",
+                "land_type": "free_special",
+                "min_total_price": 0,
+                "model": "model_1",
+                "moh_price": 0,
+                "price": 215999.6599,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-724",
+                "unit_size": 899.998583,
+                "unit_type": "land",
+                "views_count": 4
+            }
+        },
+        {
+            "type": "units",
+            "id": "837371",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "5154",
+                "land_type": "free_standard",
+                "min_total_price": 0,
+                "model": "model_2",
+                "moh_price": 0,
+                "price": 205378.2,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-5154",
+                "unit_size": 703.35,
+                "unit_type": "land",
+                "views_count": 0
+            }
+        },
+        {
+            "type": "units",
+            "id": "889856",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "2681",
+                "land_type": "free_standard",
+                "min_total_price": 0,
+                "model": "model_2",
+                "moh_price": 0,
+                "price": 175200.00000068,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-2681",
+                "unit_size": 600.000000002328,
+                "unit_type": "land",
+                "views_count": 1
+            }
+        },
+        {
+            "type": "units",
+            "id": "890658",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "6051",
+                "land_type": "free_standard",
+                "min_total_price": 0,
+                "model": "model_3",
+                "moh_price": 0,
+                "price": 189800,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-6051",
+                "unit_size": 650,
+                "unit_type": "land",
+                "views_count": 0
+            }
+        },
+        {
+            "type": "units",
+            "id": "891289",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "8405",
+                "land_type": "free_standard",
+                "min_total_price": 0,
+                "model": "model_3",
+                "moh_price": 0,
+                "price": 164548.024103416,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-8405",
+                "unit_size": 563.52063049115,
+                "unit_type": "land",
+                "views_count": 42
+            }
+        },
+        {
+            "type": "units",
+            "id": "891002",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "7252",
+                "land_type": "free_standard",
+                "min_total_price": 0,
+                "model": "model_3",
+                "moh_price": 0,
+                "price": 169360,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-7252",
+                "unit_size": 580,
+                "unit_type": "land",
+                "views_count": 0
+            }
+        },
+        {
+            "type": "units",
+            "id": "890742",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "6338",
+                "land_type": "free_standard",
+                "min_total_price": 0,
+                "model": "model_3",
+                "moh_price": 0,
+                "price": 196574.399999398,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-6338",
+                "unit_size": 673.199999997939,
+                "unit_type": "land",
+                "views_count": 0
+            }
+        },
+        {
+            "type": "units",
+            "id": "891200",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "7775",
+                "land_type": "free_standard",
+                "min_total_price": 0,
+                "model": "model_4",
+                "moh_price": 0,
+                "price": 233599.99999864,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-7775",
+                "unit_size": 799.999999995343,
+                "unit_type": "land",
+                "views_count": 0
+            }
+        },
+        {
+            "type": "units",
+            "id": "889777",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "2365",
+                "land_type": "free_standard",
+                "min_total_price": 0,
+                "model": "model_4",
+                "moh_price": 0,
+                "price": 183960,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-2365",
+                "unit_size": 630,
+                "unit_type": "land",
+                "views_count": 0
+            }
+        },
+        {
+            "type": "units",
+            "id": "891254",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "8131",
+                "land_type": "free_standard",
+                "min_total_price": 0,
+                "model": "model_4",
+                "moh_price": 0,
+                "price": 221686.4,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-8131",
+                "unit_size": 759.2,
+                "unit_type": "land",
+                "views_count": 0
+            }
+        },
+        {
+            "type": "units",
+            "id": "891251",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "8127",
+                "land_type": "free_standard",
+                "min_total_price": 0,
+                "model": "model_4",
+                "moh_price": 0,
+                "price": 234504.439356484,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-8127",
+                "unit_size": 803.097395056451,
+                "unit_type": "land",
+                "views_count": 0
+            }
+        },
+        {
+            "type": "units",
+            "id": "890919",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "6898",
+                "land_type": "free_standard",
+                "min_total_price": 0,
+                "model": "model_4",
+                "moh_price": 0,
+                "price": 183960,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-6898",
+                "unit_size": 630,
+                "unit_type": "land",
+                "views_count": 0
+            }
+        },
+        {
+            "type": "units",
+            "id": "890797",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "6587",
+                "land_type": "free_standard",
+                "min_total_price": 0,
+                "model": "model_4",
+                "moh_price": 0,
+                "price": 175991.32,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-6587",
+                "unit_size": 602.71,
+                "unit_type": "land",
+                "views_count": 5
+            }
+        },
+        {
+            "type": "units",
+            "id": "891208",
+            "attributes": {
+                "apartment_number": "",
+                "auction_status": "not_to_bid",
+                "bathroom_count": 0,
+                "bedroom_count": 1,
+                "block_number": "0",
+                "building_number": "",
+                "floor": 1,
+                "land_number": "7790",
+                "land_type": "free_standard",
+                "min_total_price": 0,
+                "model": "model_8",
+                "moh_price": 0,
+                "price": 173886,
+                "sales_channels": [
+                    "web",
+                    "mobile"
+                ],
+                "unit_channel_key": "online",
+                "unit_code": "03-06-06-0004-0-7790",
+                "unit_size": 595.5,
+                "unit_type": "land",
+                "views_count": 0
+            }
+        }
+    ]
+}
