@@ -1,6 +1,10 @@
 <?php
 	session_start();
 	session_destroy();
+
+	$user_name = "h";
+	$password  = "123";
+	$user_name = $password = "";
 ?>
 
 <script>
@@ -40,14 +44,14 @@
 							<div class="row">
 								<div class="col-md-12 form-group mb-3">
 									<label for="name" class="col-form-label">الإسم *</label>
-									<input type="text" class="form-control" name="name" id="name" value="h" placeholder="الإسم" autofocus autocomplete="off">
+									<input type="text" class="form-control" name="name" id="name" value="<?= $user_name; ?>" placeholder="الإسم" autofocus autocomplete="off">
 								</div>
 							</div>
 
 							<div class="row mb-5">
 								<div class="col-md-12 form-group mb-3">
 									<label for="password" class="col-form-label"> كلمة المرور *</label>
-									<input type="password" class="form-control" name="password" value="123" id="password" placeholder=" كلمة المرور">
+									<input type="password" class="form-control" name="password" value="<?= $password; ?>" id="password" placeholder=" كلمة المرور">
 								</div>
 							</div>
 							<div class="row justify-content-center">

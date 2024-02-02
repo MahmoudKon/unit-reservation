@@ -47,7 +47,7 @@ class UnitRserve
                 $this->beneficiary_application();
             }
         } catch (\Exception $e) {
-            logger("ERROR => " . json_encode($e));
+            logger("ERROR => " . $e->getMessage());
 
             if ($e->getMessage() == "Token is expired") {
                 $this->message = "كود العميل غير صالح (تم انتهاء صلحية الكود برجاء ادخال كود أخر)";
@@ -78,7 +78,7 @@ class UnitRserve
                 throw new Exception("هذه الوحدة  {$this->response->data->attributes->unit_code} غير متاحة للحجز", 200);
             }
         } catch (\Exception $e) {
-            logger("ERROR => " . json_encode($e));
+            logger("ERROR => " . $e->getMessage());
 
             if ($e->getMessage() == "Token is expired") {
                 $this->message = "كود العميل غير صالح (تم انتهاء صلحية الكود برجاء ادخال كود أخر)";
@@ -109,7 +109,7 @@ class UnitRserve
             $this->precondition_check( $beneficiary_national_id_number );
             return $this;
         } catch(\Exception $e) {
-            logger("ERROR => " . json_encode($e));
+            logger("ERROR => " . $e->getMessage());
 
             if ($e->getMessage() == "Token is expired") {
                 $this->message = "كود العميل غير صالح (تم انتهاء صلحية الكود برجاء ادخال كود أخر)";
@@ -143,7 +143,7 @@ class UnitRserve
             $_SESSION["booking_{$this->unit_code}"] = time();
             $this->reserve();
         } catch(\Exception $e) {
-            logger("ERROR => " . json_encode($e));
+            logger("ERROR => " . $e->getMessage());
 
             $this->message = $e->getMessage();
             $this->status = $e->getCode();
@@ -182,7 +182,7 @@ class UnitRserve
 
             $this->reserve();
         } catch(\Exception $e) {
-            logger("ERROR => " . json_encode($e));
+            logger("ERROR => " . $e->getMessage());
 
             if ($e->getCode() == 201 || $e->getMessage() == "Recall") {
                 return $this->handle($this->unit_id, $this->do_esc);
@@ -220,7 +220,7 @@ class UnitRserve
 
             $this->reserve_unit_completed($this->response->data->request_id);
         } catch(\Exception $e) {
-            logger("ERROR => " . json_encode($e));
+            logger("ERROR => " . $e->getMessage());
 
             $this->message = $e->getMessage();
             $this->status = $e->getCode();
@@ -270,20 +270,20 @@ class UnitRserve
             logger("Item Unit : " . json_encode($this->response->data->unit));
             foreach ($unit_data->included as $row) {
                 logger("Item Row : " . json_encode($row));
-                $name = $row->attributes->media->name;
+                $name = $row->attributes->name;
             }
 
             $this->check_eligibility_for_land_booking($name);
         } catch(\Exception $e) {
-            logger("ERROR => " . json_encode($e));
+            logger("ERROR => " . $e->getMessage());
 
             if ($e->getCode() == 201 || $e->getMessage() == 'Recall') {
-                return $this->handle($this->unit_id, $this->do_esc);
-            } else {
-                $this->message = $e->getMessage();
-                $this->status = $e->getCode();
-                $this->level = "reserve_unit_completed";
+                // return $this->handle($this->unit_id, $this->do_esc);
             }
+
+            $this->message = $e->getMessage();
+            $this->status = $e->getCode();
+            $this->level = "reserve_unit_completed";
         }
         return $this;
     }
@@ -309,7 +309,7 @@ class UnitRserve
                     $this->message = "تم حجز الوحدة {$this->unit_code} بنجاح. عن طريق المستخدم {$name} في الوقت " . date('Y-m-d H:i:s');
                 }
         } catch(\Exception $e) {
-            logger("ERROR => " . json_encode($e));
+            logger("ERROR => " . $e->getMessage());
 
             $this->message = $e->getMessage();
             $this->status = $e->getCode();
