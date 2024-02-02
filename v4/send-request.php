@@ -70,7 +70,6 @@ function checkUnit()
             $tokens[] = $token;
         }
     }
-    $tokens = array_values($_SESSION['tokens_in_waiting_time']);
 
     logger( "All Tokens Count : " . count( $_POST['authentication_code'] ) );
     logger( "Waiting Tokens Count : " . count( $waiting_token ) );

@@ -22,7 +22,12 @@ class UnitRserve
         try {
             $this->unit_id = $unit_id;
             $this->do_esc  = $do_esc;
-            if ($unit_id) $this->checkUnitIsBooked($unit_id);
+            if ($unit_id) {
+                if (! $this->checkUnitIsBooked($unit_id)) {
+                    return $this;
+                }
+            }
+
             if ($do_esc) {
                 if (isset($_SESSION["booking_{$this->unit_code}"])) {
                     if (time() - $_SESSION["booking_{$this->unit_code}"] < $this->five_mins) {
@@ -73,7 +78,11 @@ class UnitRserve
             }
             $this->status = $e->getCode();
             $this->level = "checkUnitIsBooked";
+            
+            return false;
         }
+
+        return true;
     }
 
     public function beneficiary_application() // 1
@@ -223,7 +232,7 @@ class UnitRserve
                     ->setHeader("Content-Encoding: gzip")
                     ->curl("GET");
 
-            if (is_null($this->response) || !property_exists($this->response, 'cqrs_status')) {
+            if (is_null($this->response) || property_exists($this->response, 'cqrs_status')) {
                 throw new \Exception('Recall', 201);
             }
 
@@ -232,7 +241,7 @@ class UnitRserve
                 throw new \Exception("الوحدة {$this->unit_code} غير متاحة للحجز", 422);
             }
 
-            if (isset($this->response->data->errors) && count($this->response->data->errors) > 0) {
+            if (isset($this->response->data->errors) && $this->response->data->errors && count($this->response->data->errors) > 0) {
                 $errors = $this->response->data->errors;
                 if ($errors[0]->title == 'project_does_not_match_the_token') {
                     throw new \Exception('المشروع غير متاح ', 422);
