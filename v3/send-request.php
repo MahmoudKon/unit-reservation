@@ -8,6 +8,10 @@ if (!isset($_SESSION['tokens_in_waiting_time'])) {
     $_SESSION['tokens_in_waiting_time'] = [];
 }
 
+if (!isset($_SESSION['un_avilable_units'])) {
+    $_SESSION['un_avilable_units'] = [];
+}
+
 function dd(...$data)
 {
     foreach ($data as $value) {
@@ -83,7 +87,7 @@ function checkUnit()
         unsetTokensFromSession();
 
         $waiting_token = array_values($_SESSION['tokens_in_waiting_time']);
-        $tokens = $response = $un_avilable_units = [];
+        $tokens = $response = [];
 
         foreach ($_POST['authentication_code'] as $index => $token) {
             if (! in_array($token, $waiting_token)) {
@@ -109,8 +113,11 @@ function checkUnit()
             foreach ($units as $unit) {
                 $unit_code = $unit->attributes->unit_code;
 
-                if ( in_array($unit_code, $un_avilable_units) ) {
-                    continue;
+                if ( isset($_SESSION['un_avilable_units'][$unit_code]) ) {
+                    if ((time() - $_SESSION['un_avilable_units'][$unit_code]) > (90 * 60)) {
+                        continue;
+                    }
+                    unset($_SESSION['un_avilable_units'][$unit_code]);
                 }
 
                 $unitRserve = new UnitRserve();
@@ -131,11 +138,10 @@ function checkUnit()
                 $un_avilable_units[] = $unit_code;
 
                 if (in_array($result['status'], [200, 201, 202, 401])) {
-                    if (in_array($result['status'], [200, 201, 202])) {
-                        setTokensSession($unit_code, $token);
-                    }
+                    $_SESSION['un_avilable_units'][$unit_code] = time();
 
                     if (stripos($result['message'], 'تم حجز الوحدة') !== false) {
+                        setTokensSession($unit_code, $token);
                         continue 2;
                     }
                 }
