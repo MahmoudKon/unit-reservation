@@ -30,12 +30,12 @@ class UnitRserve
         try {
             $this->unit_id = $unit_id;
             $this->do_esc  = $do_esc;
-            if ($unit_id) {
-                if (! $this->checkUnitIsBooked($unit_id)) {
-                    logger("checkUnitIsBooked >>>>> $unit_id");
-                    return $this;
-                }
-            }
+            // if ($unit_id) {
+            //     if (! $this->checkUnitIsBooked($unit_id)) {
+            //         logger("checkUnitIsBooked >>>>> $unit_id");
+            //         return $this;
+            //     }
+            // }
 
             if ($do_esc && false) {
                 if (isset($_SESSION["booking_{$this->unit_code}"])) {
