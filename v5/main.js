@@ -4,7 +4,7 @@ $(function () {
   var ajaxRequestInterval = 0;
   var setTime = 200;
   var sleepTime = 400;
-  var abort_request_time = 10000;
+  var abort_request_time = 20000; // 20 S
   var abort_ajax_request = {abort: function() {}};
 
   // Form

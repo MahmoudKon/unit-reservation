@@ -4,7 +4,7 @@ $(function () {
   var ajaxRequestInterval = 0;
   var setTime = 200;
   var sleepTime = 400;
-  var abort_request_time = 10000;
+  var abort_request_time = 20000; // 20 S
   var projects = [];
   let current_project_index = 0;
 
@@ -59,7 +59,7 @@ $(function () {
       url: "send-request.php",
       data: $(form).serialize()+`&project=${projects[current_project_index]}`,
       sync: true,
-      // timeout: abort_request_time,
+      timeout: abort_request_time,
       beforeSend: function () {$(".submitting").css("display", "block").text("Submitting...")},
       success: function (response) {
         console.log("old => " + current_project_index);

@@ -264,10 +264,10 @@ class UnitRserve
                 if ($error->title == 'project_does_not_match_the_token') {
                     throw new \Exception("المشروع {$this->project_id}  غير متاح", 422);
                 } else if ($error->title == 'invalid_available_unit') {
-                    throw new \Exception("الوحدة {$this->unit_code} غير متاحة للحجز", 422);
+                    throw new \Exception("الوحدة {$this->unit_code} غير متاحة للحجز", 200);
                 } else if ($error->title == 'already_has_reserved_unit') {
                 } else {
-                    throw new \Exception('حدث خطأ اثناء حجز الوحدة', 422);
+                    throw new \Exception("الوحدة {$this->unit_code} غير متاحة للحجز", 200);
                 }
             }
 
@@ -316,14 +316,10 @@ class UnitRserve
                 ->setHeader("authentication: $this->token")
                 ->curl();
 
-                if ( is_null($this->response) ) {
-                    $this->status = 200;
-                    $this->message = "الوحدة {$this->unit_code}  غير متاحة للحجز";
-                } elseif(isset($this->response->errors)) {
-                    $this->status = 200;
+                $this->status = 200;
+                if ( is_null($this->response) || isset($this->response->errors) ) {
                     $this->message = "الوحدة {$this->unit_code}  غير متاحة للحجز";
                 } else {
-                    $this->status = 200;
                     $this->message = "تم حجز الوحدة {$this->unit_code} بنجاح. عن طريق المستخدم {$name} في الوقت " . date('Y-m-d H:i:s');
                 }
         } catch(\Exception $e) {

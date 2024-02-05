@@ -15,6 +15,14 @@ class UnitRserve
     protected int $status = 500;
     protected int $five_mins = 5 * 60;
     protected bool $do_esc = true;
+    protected $national_id_number = false;
+
+    public function __construct()
+    {
+        if ( ! isset($_SESSION['national_id_number']) ) {
+            $_SESSION['national_id_number'] = [];
+        }
+    }
 
     public function handle(?int $unit_id = null, bool $do_esc = true)
     {
@@ -22,11 +30,11 @@ class UnitRserve
         try {
             $this->unit_id = $unit_id;
             $this->do_esc  = $do_esc;
-            if ($unit_id) {
-                if (! $this->checkUnitIsBooked($unit_id)) {
-                    return $this;
-                }
-            }
+            // if ($unit_id) {
+            //     if (! $this->checkUnitIsBooked($unit_id)) {
+            //         return $this;
+            //     }
+            // }
 
             if ($do_esc) {
                 if (isset($_SESSION["booking_{$this->unit_code}"])) {
@@ -36,7 +44,13 @@ class UnitRserve
                 }
             }
 
-            $this->beneficiary_application();
+            logger("national_id_number : $this->national_id_number");
+            logger("national_id_numbers : " . json_encode($_SESSION['national_id_number']));
+            if ($this->national_id_number) {
+                $this->precondition_check($this->national_id_number);
+            } else {
+                $this->beneficiary_application();
+            }
         } catch (\Exception $e) {
             logger("ERROR => " . json_encode($e));
 
@@ -98,7 +112,10 @@ class UnitRserve
                 throw new \Exception($this->response->errors[0]->detail, $this->response->errors[0]->status);
             }
 
-            $this->precondition_check( $this->response->data->attributes->beneficiary_national_id_number );
+            $beneficiary_national_id_number = $this->response->data->attributes->beneficiary_national_id_number;
+            $_SESSION['national_id_number'][$this->token] = $beneficiary_national_id_number;
+
+            $this->precondition_check( $beneficiary_national_id_number );
             return $this;
         } catch(\Exception $e) {
             logger("ERROR => " . json_encode($e));
@@ -130,8 +147,10 @@ class UnitRserve
                 ->setHeader('Content-Type: application/json; charset=utf-8')
                 ->setHeader("authentication: $this->token")
                 ->curl();
-
-            $this->booking_precondition_check_completed($this->response->data->request_id);
+                
+            // $this->booking_precondition_check_completed($this->response->data->request_id);
+            $_SESSION["booking_{$this->unit_code}"] = time();
+            $this->reserve();
         } catch(\Exception $e) {
             logger("ERROR => " . json_encode($e));
 
@@ -339,6 +358,11 @@ class UnitRserve
     public function setToken(string $token)
     {
         $this->token = $token;
+        
+        if ( isset($_SESSION['national_id_number'][$token]) ) {
+            $this->national_id_number = $_SESSION['national_id_number'][$token];
+        }
+
         return $this;
     }
 

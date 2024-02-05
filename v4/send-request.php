@@ -86,8 +86,13 @@ function checkUnit()
             throw new Exception("كل التوكانات تم الحجز لها", 404);
         }
 
+        if (count($tokens) == 0) {
+            throw new Exception("لا يوجد تكونات متاحة", 404);
+        }
+
         $projects = [$_POST['project']];
         $projects = $_POST['project_number'];
+
         foreach ($projects as $project) {
             $units   = getUnits($project);
             logger( "Send Units Count  For Project {$project}: " . count( $units ) );
@@ -104,29 +109,23 @@ function checkUnit()
                 continue;
             }
 
-            if (count($tokens) == 0) {
-                $response[] = [
-                    'token'     => '',
-                    'unit_code' => '',
-                    'details'   => [
-                        'message' => "لا يوجد تكونات متاحة",
-                        'status'  => 404,
-                    ]
-                ];
-                continue;
-            }
-    
+            
             foreach ($tokens as $token) {
-                foreach ($units as $unit) {
+                $max_units_count = count($units) > 10 ? 10 : count($units);
+                for ($i=0; $i < $max_units_count; $i++) {
+                    $unit = $units[$i];
+                // foreach ($units as $unit) {
                     $unit_code = $unit->attributes->unit_code;
-        
+
                     if ( isset($_SESSION['un_avilable_units'][$unit_code]) ) {
+                        logger( "This Unit $unit_code In Ignore List" );
                         if ((time() - $_SESSION['un_avilable_units'][$unit_code]) > (90 * 60)) {
+                            logger( "This Unit $unit_code Still In Ignore List" );
                             continue;
                         }
                         unset($_SESSION['un_avilable_units'][$unit_code]);
                     }
-    
+
                     $unitRserve = new UnitRserve();
                     $result = $unitRserve->setToken($token)
                                             ->setProject($project)
