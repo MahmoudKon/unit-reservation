@@ -184,7 +184,7 @@ function getUnits($project)
 
 function logger($log)
 {
-    file_put_contents('log.log', "$log \n", FILE_APPEND);
+    file_put_contents('./log.log', "[ ".date('Y-m-d H:i:s A')." ] $log \n", FILE_APPEND);
 }
 
 function unsetTokensFromSession()

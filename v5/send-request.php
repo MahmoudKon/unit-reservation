@@ -71,11 +71,13 @@ function checkUnit()
         logger("GET UNIT | ".json_encode($response));
 
         if (!$response || !isset($response->data)) {
+            logger( "هذه الوحدة غير موجودة  من بره" );
             throw new Exception("هذه الوحدة غير موجودة", 403);
         }
 
         if ($response->data->attributes->booking_status != 'available') {
-            throw new Exception("هذه الوحدة {$response->data->attributes->unit_code} غير متاحة للحجز", 404);
+            logger( "هذه الوحدة محجوزة مسبقا   من بره" );
+            throw new Exception("هذه الوحدة محجوزة مسبقا", 403);
         }
 
         $units = isset($response->data) ? [$response->data] : [];
@@ -92,32 +94,41 @@ function checkUnit()
             }
         }
 
-        $response = [];
-        if ($units && isset($_POST['authentication_code']) && $tokens) {
-            foreach ($tokens as $index => $token) {
-                $unit = $units[$index] ?? NULL;
-                if ( $unit ) {
-                    $unit_code = $units[$index]->attributes->unit_code;
-                    $unitRserve = new UnitRserve();
+        logger( "All Tokens Count : " . count( $_POST['authentication_code'] ) );
+        logger( "Waiting Tokens Count : " . count( $waiting_token ) );
+        logger( "Send Tokens Count : " . count( $tokens ) );
 
+        $response = [];
+        $not_avilable_units = [];
+        if ($units && $tokens) {
+            foreach ($tokens as $token) {
+                foreach ($units as $unit) {
+                    $unit_code = $unit->attributes->unit_code;
+
+                    if ( in_array($unit_code, $not_avilable_units) ) continue;
+                    $not_avilable_units[] = $unit_code;
+
+                    $unitRserve = new UnitRserve();
                     $result = $unitRserve->setToken($token)
                                             ->setProject($_POST['project_number'])
                                             ->setUnit($unit_code)
                                             ->handle()
                                             ->getMessage();
 
-                    logger("Token Result [$index]| ".json_encode($result));
                     $response[] = [
                         'token'     => $token,
                         'unit_code' => $unit_code,
                         'details'   => $result
                     ];
+
+                    if (in_array($result['status'], [200])) {
+                        continue 2;
+                    }
                 }
             }
         } else {
             throw new Exception(count($units) == 0 ? "لا يوجد وحدات متاحة في هذا المشروع" : "كل التوكانات تم الحجز لها", 404);
         }
-        // clearSessions();
         return json_encode($response, true);
     } catch(\Exception $e) {
         return json_encode([
@@ -134,7 +145,7 @@ function checkUnit()
 
 function logger($log)
 {
-    file_put_contents('./log.log', "$log \n", FILE_APPEND);
+    file_put_contents('./log.log', "[ ".date('Y-m-d H:i:s A')." ] $log \n", FILE_APPEND);
 }
 
 function clearSessions()
