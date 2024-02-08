@@ -16,6 +16,7 @@ class UnitRserve
     protected int $five_mins = 5 * 60;
     protected bool $do_esc = true;
     protected $national_id_number = false;
+    protected $request_id = '';
 
     public function __construct()
     {
@@ -52,7 +53,7 @@ class UnitRserve
         return $this;
     }
 
-    public function beneficiary_application() // 1
+    public function beneficiary_application(bool $stop = false) // 1
     {
         logger("________ beneficiary_application (1) ________");
         try {
@@ -69,8 +70,9 @@ class UnitRserve
             $this->national_id_number = $beneficiary_national_id_number;
             $_SESSION['national_id_number'][$this->token] = $beneficiary_national_id_number;
 
+            if ($stop) return ;
+
             $this->precondition_check( $beneficiary_national_id_number );
-            return $this;
         } catch(\Exception $e) {
             if ($e->getMessage() == "Token is expired") {
                 $this->message = "كود العميل غير صالح (تم انتهاء صلحية الكود برجاء ادخال كود أخر)";
@@ -102,8 +104,9 @@ class UnitRserve
 
             $_SESSION["booking_{$this->unit_code}"] = time();
             if ($do_check) {
-                $this->booking_precondition_check_completed($this->response->data->request_id);
+                $this->booking_precondition_check_completed($this->request_id); // 5
             } else {
+                $this->request_id = $this->response->data->request_id;
                 $this->reserve();
             }
         } catch(\Exception $e) {
@@ -150,7 +153,8 @@ class UnitRserve
                 ->setHeader("authentication: $this->token")
                 ->curl();
 
-                $this->precondition_check($this->national_id_number, true);
+            // $this->precondition_check($this->national_id_number, true);
+            $this->booking_precondition_check_completed($this->request_id);
         } catch(\Exception $e) {
             $this->message = $e->getMessage();
             $this->status = $e->getCode();
@@ -189,6 +193,23 @@ class UnitRserve
         }
 
         return $this;
+    }
+
+    public function checkUnitIsAvilable($unit_code)
+    {
+        logger( "Calling checkUnitIsAvilable ( $unit_code )" );
+        $this->data = [];
+        $this->setUrl("https://sakani.sa/mainIntermediaryApi/v3/units/{$unit_code}")->curl("GET");
+
+        if (!$this->response || !isset($this->response->data)) {
+            return "هذه الوحدة $unit_code غير موجودة";
+        }
+
+        if ($this->response->data->attributes->booking_status != 'available') {
+            return "هذه الوحدة $unit_code محجوزة مسبقا";
+        }
+
+        return false;
     }
 
     public function getMessage()

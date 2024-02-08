@@ -12,6 +12,10 @@ if (!isset($_SESSION['un_avilable_units'])) {
     $_SESSION['un_avilable_units'] = [];
 }
 
+if (!isset($_SESSION['national_id_number'])) {
+    $_SESSION['national_id_number'] = [];
+}
+
 function dd(...$data)
 {
     foreach ($data as $value) {
@@ -103,8 +107,14 @@ function checkUnit()
             throw new Exception("كل التوكانات تم الحجز لها", 404);
         }
 
+        foreach ($tokens as $token) {
+            if (! isset($_SESSION['national_id_number'][$token]))
+                (new UnitRserve())->setToken($token)->beneficiary_application(true);
+        }
+
         $units = getUnits($project);
         logger( "Units Count : " . count( $units ) );
+        logger( "Units : " . json_encode( $units ) );
         if (count($units) == 0) {
             throw new Exception("لا يوجد وحدات متاحة في المشروع $project", 404);
         }
@@ -118,6 +128,20 @@ function checkUnit()
                         continue;
                     }
                     unset($_SESSION['un_avilable_units'][$unit_code]);
+                }
+
+                if ($message = (new UnitRserve())->checkUnitIsAvilable($unit->id)) {
+                    logger("RESULT checkUnitIsAvilable => $message");
+                    $response[] = [
+                        'token'     => $token,
+                        'unit_code' => $unit_code,
+                        'details'   => [
+                            'message' => $message,
+                            'status'  => 404,
+                        ]
+                    ];
+
+                    continue;
                 }
 
                 $unitRserve = new UnitRserve();
@@ -136,6 +160,10 @@ function checkUnit()
                 logger("RESULT => " . json_encode($row));
                 $response[] = $row;
                 $un_avilable_units[] = $unit_code;
+
+                if ($result['message'] == "كود العميل غير صالح (تم انتهاء صلحية الكود برجاء ادخال كود أخر)") {
+                    continue 2;
+                }
 
                 if (in_array($result['status'], [200, 201, 202, 401])) {
                     $_SESSION['un_avilable_units'][$unit_code] = time();
@@ -184,140 +212,10 @@ function unsetTokensFromSession()
     }
 }
 
-function unitsRserve($unit_code, $authentication_code)
-{
-    $data = ["data" => ["id" => "", "type" => "units", "attributes" => ["unit_code" => $unit_code]]];
-
-    $headers = array(
-        'Content-Type: application/json; charset=utf-8',
-        'authentication: ' . $authentication_code,
-    );
-
-    $curl = curl_init("https://sakani.sa/mainIntermediaryApi/v3/units/reserve");
-    curl_setopt($curl, CURLOPT_POST, 1);
-    curl_setopt($curl, CURLOPT_POSTFIELDS, json_encode($data));
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36");
-    $response = curl_exec($curl);
-    curl_close($curl);
-    
-    $response = json_decode($response);
-    $status   = 200;
-    $message  = null;
-
-    if (isset($response->errors) && isset($response->errors[0]))
-        $status   = $response->errors[0]->status;
-
-    if ($status == 401) {
-        $message =  $response->errors[0]->detail == 'Token is expired'
-            ? 'كود العميل غير صالح (تم انتهاء صلاحية الكود برجاء ادخال كود أخر)'
-            : '(كود العميل غير صحيح (برجاء ادخال كود صحيح';
-    } elseif ($status == 403) {
-        $message = 'الوحدة المحددة غير متاحة للحجز.';
-    } elseif ($status == 400) {
-        setTokensSession($unit_code, $authentication_code);
-        $message = 'عذرا! يوجد لديك حجز مسبقا';
-    }
-
-    logger( "Method  :  unitsRserve    |   message : $message");
-    logger( "Response : " . json_encode($response));
-
-    if ($message) {
-        return ['message' => $message, 'status' => $status];
-    }
-
-    return checkEligibilityForLandBooking($authentication_code, $response);
-}
-
-function checkEligibilityForLandBooking($authentication_code, $prev_response)
-{
-    $headers = array(
-        'Content-Type: application/json; charset=utf-8',
-        'authentication: ' . $authentication_code,
-    );
-
-    $curl = curl_init("https://sakani.sa/eligibilityEngineServiceApi/v3/beneficiary_applications/check_eligibility_for_land_booking");
-    curl_setopt($curl, CURLOPT_POST, 1);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36");
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    $response = curl_exec($curl);
-    curl_close($curl);
-
-    if (strpos($response, '"code": "existing_active_booking"')) {
-        $message = 'تم حجز الوحدة من قبل';
-    } elseif (strpos($response, '"request_id":')) {
-        setTokensSession($prev_response->data->attributes->unit_code, $authentication_code);
-        $message = "تم حجز الوحدة {$prev_response->data->attributes->unit_code} بنجاح. عن طريق المستخدم {$prev_response->included[0]->attributes->name} في الوقت " . date('Y-m-d H:i:s');
-    } else {
-        $message = 'حدث خطأ أثناء حجز الوحدة.';
-    }
-
-    logger( "Method  :  checkEligibilityForLandBooking    |   message : $message");
-    logger( "Response : " . json_encode($response));
-
-    return ['message' => $message, 'status' => 200];
-}
-
 function setTokensSession($unit_code, $token)
 {
     logger( "unit code  '". $unit_code ."'  | Token : $token ");
     if (!in_array($token, $_SESSION['tokens_in_waiting_time']) || true) {
         $_SESSION['tokens_in_waiting_time'][ time() ] = $token;
     }
-}
-
-function checkEligibilityForLandBookingRequest($authentication_code, $request_id)
-{
-    $headers = array(
-        'Content-Type: application/json; charset=utf-8',
-        'authentication: ' . $authentication_code,
-    );
-
-    $curl = curl_init("https://sakani.sa/sakani-queries-service/cqrs-res?topic=check_eligibility_for_land_booking&request_id=$request_id");
-    curl_setopt($curl, CURLOPT_POST, 0);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36");
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    $response = curl_exec($curl);
-    curl_close($curl);
-
-    return $response;
-}
-
-function beneficiaryBookings($authentication_code, $code)
-{
-    $headers = array(
-        'Content-Type: application/json; charset=utf-8',
-        'authentication: ' . $authentication_code,
-    );
-
-    $curl = curl_init("https://sakani.sa/mainIntermediaryApi/v4/beneficiary/bookings/$code?include=project");
-    curl_setopt($curl, CURLOPT_POST, 1);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36");
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    $response = curl_exec($curl);
-    curl_close($curl);
-
-    return $response;
-}
-
-function bookingsLands($authentication_code, $code)
-{
-    $headers = array(
-        'Content-Type: application/json; charset=utf-8',
-        'authentication: ' . $authentication_code,
-    );
-
-    $curl = curl_init("https://sakani.sa/mainIntermediaryApi/v4/bookings/lands/$code/sign_contract_later");
-    curl_setopt($curl, CURLOPT_POST, 1);
-    curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
-    curl_setopt($curl, CURLOPT_USERAGENT, "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/111.0.0.0 Safari/537.36");
-    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-    $response = curl_exec($curl);
-    curl_close($curl);
-
-    return $response;
 }

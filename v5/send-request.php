@@ -98,6 +98,10 @@ function checkUnit()
         logger( "Waiting Tokens Count : " . count( $waiting_token ) );
         logger( "Send Tokens Count : " . count( $tokens ) );
 
+        foreach ($tokens as $token) {
+            (new UnitRserve())->setToken($token)->beneficiary_application(true);
+        }
+
         $response = [];
         $not_avilable_units = [];
         if ($units && $tokens) {

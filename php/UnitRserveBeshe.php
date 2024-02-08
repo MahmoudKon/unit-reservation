@@ -14,6 +14,7 @@ class UnitRserve
     protected int $status = 500;
     protected int $five_mins = 5 * 60;
     protected $national_id_number = false;
+    protected $request_id = '';
 
     public function __construct()
     {
@@ -53,7 +54,7 @@ class UnitRserve
         return $this;
     }
 
-    public function beneficiary_application() // 1
+    public function beneficiary_application(bool $stop = false) // 1
     {
         logger("________ beneficiary_application ( 1 ) ________");
         try {
@@ -69,6 +70,8 @@ class UnitRserve
             $beneficiary_national_id_number = $this->response->data->attributes->beneficiary_national_id_number;
             $this->national_id_number = $beneficiary_national_id_number;
             $_SESSION['national_id_number'][$this->token] = $beneficiary_national_id_number;
+
+            if ($stop) return ;
 
             $this->precondition_check( $beneficiary_national_id_number );
         } catch(\Exception $e) {
@@ -105,8 +108,9 @@ class UnitRserve
             $_SESSION["booking_{$this->unit_code}"] = time();
 
             if ($do_check) {
-                $this->booking_precondition_check_completed($this->response->data->request_id);
+                $this->booking_precondition_check_completed($this->request_id); // 5
             } else {
+                $this->request_id = $this->response->data->request_id;
                 $this->reserve();
             }
         } catch(\Exception $e) {
@@ -153,7 +157,8 @@ class UnitRserve
                 ->setHeader("authentication: $this->token")
                 ->curl();
 
-                $this->precondition_check($this->national_id_number, true);
+            // $this->precondition_check($this->national_id_number, true);
+            $this->booking_precondition_check_completed($this->request_id);
         } catch(\Exception $e) {
             $this->message = $e->getMessage();
             $this->status = $e->getCode();

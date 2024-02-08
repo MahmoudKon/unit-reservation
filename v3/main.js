@@ -4,7 +4,7 @@ $(function () {
   var ajaxRequestInterval = 0;
   var setTime = 200;
   var sleepTime = 400;
-  var abort_request_time = 10000;
+  var abort_request_time = 40000;
   var abort_ajax_request = {abort: function() {}};
 
   // Form
@@ -54,7 +54,7 @@ $(function () {
       url: "send-request.php",
       data: $(form).serialize(),
       sync: true,
-      // timeout: abort_request_time,
+      timeout: abort_request_time,
       beforeSend: function () {$(".submitting").css("display", "block").text("Submitting...")},
       success: function (response) {
         response = JSON.parse(response);
