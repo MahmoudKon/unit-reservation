@@ -103,6 +103,18 @@ function checkUnit()
         $projects = $_POST['project_number'];
 
         foreach ($projects as $project) {
+            if (! checkProjectIsBookable($project)) {
+                $response[] = [
+                    'token'     => $token,
+                    'unit_code' => '',
+                    'details'   => [
+                        'message' => "هذا المشروع {$project} غير متاح للحجز",
+                        'status'  => 404,
+                    ]
+                ];
+                continue;
+            }
+            
             $units   = getUnits($project);
             logger( "Send Units Count  For Project {$project}: " . count( $units ) );
             logger( "Units : " . json_encode( $units ) );
@@ -201,6 +213,16 @@ function getUnits($project)
     curl_close($curl);
     $response = json_decode($response);
     return isset($response->data) ? $response->data : [];
+}
+
+function checkProjectIsBookable($project)
+{
+    $curl = curl_init("https://sakani.sa/mainIntermediaryApi/v4/projects/$project?include=amenities,projects_amenities,developer,project_unit_types");
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    $response = curl_exec($curl);
+    curl_close($curl);
+    $response = json_decode($response);
+    return isset($response->data) && $response->data->attributes && $response->data->attributes->bookable;
 }
 
 function logger($log)

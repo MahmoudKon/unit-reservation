@@ -112,6 +112,10 @@ function checkUnit()
                 (new UnitRserve())->setToken($token)->beneficiary_application(true);
         }
 
+        if (! checkProjectIsBookable($project)) {
+            throw new Exception("هذا المشروع {$project} غير متاح للحجز", 404);
+        }
+
         $units = getUnits($project);
         logger( "Units Count : " . count( $units ) );
         logger( "Units : " . json_encode( $units ) );
@@ -193,6 +197,16 @@ function checkUnit()
 function logger($log)
 {
     file_put_contents('./log.log', "[ ".date('Y-m-d H:i:s A')." ] $log \n", FILE_APPEND);
+}
+
+function checkProjectIsBookable($project)
+{
+    $curl = curl_init("https://sakani.sa/mainIntermediaryApi/v4/projects/$project?include=amenities,projects_amenities,developer,project_unit_types");
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+    $response = curl_exec($curl);
+    curl_close($curl);
+    $response = json_decode($response);
+    return isset($response->data) && $response->data->attributes && $response->data->attributes->bookable;
 }
 
 function clearSessions()
