@@ -68,7 +68,8 @@ $(function () {
         console.log(response);
         response = JSON.parse(response);
         let ele = "load-messages";
-        let elements_count = $('body').find('.clone-row').length;
+        let elements_count = $('body').find('[name="authentication_code[]"]').length;
+        let clearInterval = false;
 
         response.forEach(function(row) {
             let message = row.details.message || row.details || '';
@@ -78,8 +79,9 @@ $(function () {
                 $(".submitting").css("display", "block").text("Resending In Moments...");
 
             } else if (message == 'كود العميل غير صالح (تم انتهاء صلحية الكود برجاء ادخال كود أخر)') {
+              console.log('in');
                 //Clear Ajax Request Interval
-                if (elements_count < 2) clearInterval(ajaxRequestInterval);
+                if (elements_count < 2) clearInterval = true;
                 $(".submitting").css("display", "none");
                 
             } else if (message == 'goto login') {
@@ -91,9 +93,14 @@ $(function () {
             if (message !== '' && ! message.includes('Fatal error'))  showMessage(message, ele);
             console.log(message);
         });
+
+        if (clearInterval) {
+          clearInterval(ajaxRequestInterval);
+        } else {
+          if (elements_count > 1) reSetInterval(form);
+          else reSetInterval(form, setTime);
+        }
         
-        if (elements_count > 1) reSetInterval(form);
-        else reSetInterval(form, setTime);
         console.log(`Request Will Send After : ${setTime}`);
       },
       error: function (response) {

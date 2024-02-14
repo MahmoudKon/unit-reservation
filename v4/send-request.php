@@ -165,6 +165,7 @@ function checkUnit()
                     $response[] = $row;
     
                     if ($result['message'] == "كود العميل غير صالح (تم انتهاء صلحية الكود برجاء ادخال كود أخر)") {
+                        $_SESSION['tokens_in_waiting_time'][time()] = $token;
                         continue 2;
                     }
 

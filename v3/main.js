@@ -59,7 +59,7 @@ $(function () {
       success: function (response) {
         response = JSON.parse(response);
         let ele = "load-messages";
-        let elements_count = $('body').find('.clone-row').length;
+        let elements_count = $('body').find('[name="authentication_code[]"]').length;
 
         response.forEach(function(row) {
             let message = row.details.message || row.details || '';
@@ -91,6 +91,7 @@ $(function () {
             console.log(message);
             
         });
+
         console.log(`Request Will Send After : ${setTime}`);
       },
       error: function (response) {
